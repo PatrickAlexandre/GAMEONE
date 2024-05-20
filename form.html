@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy and Life Expectancy Calculator</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4 text-center">Energy and Life Expectancy Calculator</h1>
+        <form id="energyForm">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="gender">Gender</label>
+                    <select class="form-control" id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" id="age" placeholder="Enter your age">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" class="form-control" id="weight" placeholder="Enter your weight">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" class="form-control" id="height" placeholder="Enter your height">
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="activity">Activity Level</label>
+                    <input type="number" step="0.1" class="form-control" id="activity" placeholder="Enter activity level">
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="calculateEnergy()">Calculate</button>
+        </form>
+        <div class="mt-4">
+            <h3>Results</h3>
+            <p id="bmr">BMR: </p>
+            <p id="dej">DEJ: </p>
+            <p id="nap">NAP: </p>
+        </div>
+        <div class="progress mt-4">
+            <div id="lifePercentage" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+        </div>
+        <p id="ageDisplay"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const allInputs = document.querySelectorAll('#weight, #height, #activity');
+            const lifeExpectancyInputs = document.querySelectorAll('#gender, #age');
+
+            allInputs.forEach(input => {
+                input.addEventListener('change', calculateEnergy);
+            });
+
+            lifeExpectancyInputs.forEach(input => {
+                input.addEventListener('change', calculateEnergy);
+            });
+        });
+
+        function calculateBMR(gender, weight, height, age) {
+            if (gender === 'male') {
+                return (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            } else {
+                return (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            }
+        }
+
+        function calculateDEJ(bmr, activityLevel) {
+            return bmr * activityLevel;
+        }
+
+        function calculateLifeExpectancyPercentage(gender, age) {
+            const lifeExpectancy = gender === 'male' ? 80.0 : 85.7;
+            const remainingLifeYears = Math.max(lifeExpectancy - age, 0);
+            return {percentage: (remainingLifeYears / lifeExpectancy) * 100, lifeExpectancy};
+        }
+
+        function calculateEnergy() {
+            const gender = document.getElementById('gender').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseInt(document.getElementById('age').value, 10);
+            const activityLevel = parseFloat(document.getElementById('activity').value);
+
+            if (weight > 0 && height > 0 && age > 0 && activityLevel > 0) {
+                const bmr = calculateBMR(gender, weight, height, age);
+                const dej = calculateDEJ(bmr, activityLevel);
+                document.getElementById('bmr').innerHTML = `BMR: ${bmr.toFixed(0)} kcal/day`;
+                document.getElementById('dej').innerHTML = `Daily Energy Expenditure (DEJ): ${dej.toFixed(0)} kcal/day`;
+                document.getElementById('nap').innerHTML = `Activity Level: ${activityLevel.toFixed(2)}`;
+                updateLifeExpectancy();  // Ensure this updates whenever calculateEnergy is called
+            } else {
+                document.getElementById('bmr').innerHTML = "Please fill all fields with valid values to calculate BMR and DEJ.";
+            }
+        }
+
+        function updateLifeExpectancy() {
+            const gender = document.getElementById('gender').value;
+            const age = parseInt(document.getElementById('age').value, 10);
+
+            if (age > 0) {
+                const lifeData = calculateLifeExpectancyPercentage(gender, age);
+                const lifePercentageFormatted = `(${lifeData.percentage.toFixed(0)}%) ${age} / ${lifeData.lifeExpectancy} years`;
+                document.getElementById('ageDisplay').innerHTML = `Age: ${age}`;
+                document.getElementById('lifePercentage').innerHTML = lifePercentageFormatted;
+                document.getElementById('lifePercentage').style.width = `${lifeData.percentage.toFixed(2)}%`;
+            }
+        }
+    </script>
+</body>
+</html>

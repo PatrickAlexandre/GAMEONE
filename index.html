@@ -70,7 +70,7 @@
         <div id="energyModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden">
             <div class="bg-gray-900 p-8 rounded-lg w-full max-w-2xl">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-lg font-bold">Energy and Life Expectancy Calculator</h2>
+                    <h2 class="text-lg font-bold">Energy and Life 🧮</h2>
                     <button id="closeModalBtn" class="text-gray-400 hover:text-gray-200">&times;</button>
                 </div>
                 <form id="energyForm">
@@ -90,25 +90,25 @@
                     <div class="flex flex-wrap -mx-2 mb-4">
                         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
                             <label for="weight" class="block text-gray-400">Weight (kg)</label>
-                            <input type="number" class="form-control block w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2" id="weight" placeholder="Enter your weight">
+                            <input type="number" class="form-control block w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2" id="weight" placeholder="Enter your weight" value="62" min="2.1" max="635">
                         </div>
                         <div class="w-full md:w-1/3 px-2 mb-4 md:mb-0">
                             <label for="height" class="block text-gray-400">Height (cm)</label>
-                            <input type="number" class="form-control block w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2" id="height" placeholder="Enter your height">
+                            <input type="number" class="form-control block w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2" id="height" placeholder="Enter your height" value="165" min="54.6" max="272">
                         </div>
                         <div class="w-full md:w-1/3 px-2">
                             <label for="activity" class="block text-gray-400">Activity Level</label>
-                            <input type="number" step="0.1" class="form-control block w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2" id="activity" placeholder="Enter activity level">
+                            <input type="number" step="0.1" class="form-control block w-full bg-gray-800 text-white border border-gray-700 rounded px-3 py-2" id="activity" placeholder="Enter activity level" value="1.5" min="1.2" max="2.5">
                         </div>
                     </div>
                 </form>
                 <div class="mt-4">
                     <h3 class="text-lg">Results</h3>
-                    <p id="bmr" class="text-gray-400">BMR: </p>
-                    <p id="dej" class="text-gray-400">DEJ: </p>
-                    <p id="nap" class="text-gray-400">NAP: </p>
+                    <p id="bmr" class="text-gray-400">BMR </p>
+                    <p id="dej" class="text-gray-400">DEJ </p>
+                    <p id="nap" class="text-gray-400">NAP </p>
+                    <p id="ageDisplay" class="text-gray-400 mt-2"></p>
                 </div>
-                <p id="ageDisplay" class="text-gray-400 mt-2"></p>
             </div>
         </div>
 
@@ -116,7 +116,7 @@
         <div class="mt-4 bg-gray-900 p-4 rounded-lg">
             <p>Age: <span id="displayed-age"></span></p>
             <p>Points Hauts Faits: <span id="points-hauts-faits"></span></p>
-            <div class="progress mt-4 bg-gray-700 rounded h-6">
+            <div class="progress mt-4 bg-gray-700 rounded h-6 overflow-hidden">
                 <div id="lifePercentage" class="bg-green-500 h-6 rounded" role="progressbar" style="width: 0%;"></div>
             </div>
         </div>
@@ -172,9 +172,9 @@
                 if (weight > 0 && height > 0 && age > 0 && activityLevel > 0) {
                     const bmr = calculateBMR(gender, weight, height, age);
                     const dej = calculateDEJ(bmr, activityLevel);
-                    document.getElementById('bmr').innerHTML = `BMR: ${bmr.toFixed(0)} kcal/day`;
-                    document.getElementById('dej').innerHTML = `Daily Energy Expenditure (DEJ): ${dej.toFixed(0)} kcal/day`;
-                    document.getElementById('nap').innerHTML = `Activity Level: ${activityLevel.toFixed(2)}`;
+                    document.getElementById('bmr').innerHTML = `Métabolisme de Base au Repos (MBR) ${bmr.toFixed(0)} kcal/jour`;
+                    document.getElementById('dej').innerHTML = `Dépense Énergétique Journalière (DEJ) ${dej.toFixed(0)} kcal/jour`;
+                    document.getElementById('nap').innerHTML = `Niveau d'Activité Physique (NAP) ${activityLevel.toFixed(2)}`;
                     updateLifeExpectancy(gender, age);
                 } else {
                     document.getElementById('bmr').innerHTML = "Please fill all fields with valid values to calculate BMR and DEJ.";
